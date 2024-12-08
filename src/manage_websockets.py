@@ -35,5 +35,6 @@ async def event_init(message_json, websocket):
 
 
 async def event_join(message_json, websocket):
-    game_key = message_json.get("game_key")
-    print(f"Player joined game with key {game_key}")
+    game_key = message_json.get("room")
+    player = message_json.get("name")
+    print(f"{player} joined game with key {game_key}")
