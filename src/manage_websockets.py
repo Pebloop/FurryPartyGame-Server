@@ -14,6 +14,7 @@ async def manage_websockets(message: str, websocket):
 
     if eventType == "init":
         game = message_json.get("game")
-        game_key = secrets.token_urlsafe(6)
+        game_key = secrets.token_urlsafe(4)
+        game_key = game_key.upper()
         print(f"New game created with key {game_key}")
         await websocket.send(json.dumps({"type": "init", "game_key": game_key}))
