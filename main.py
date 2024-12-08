@@ -10,7 +10,7 @@ from src.manage_websockets import manage_websockets
 
 async def handler(websocket):
     async for message in websocket:
-        manage_websockets(message, websocket)
+        await manage_websockets(message, websocket)
 
 
 async def main():
