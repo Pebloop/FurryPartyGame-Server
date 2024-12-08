@@ -1,0 +1,24 @@
+version: '3'
+services:
+#  sqlite:
+#    container_name: FPG-sqlite
+#    image: sqlite:latest
+#    volumes:
+#      - sqlite-data:/fpgdb
+#    ports:
+#      - "5432:5432"
+#    restart: always
+
+  fpg:
+    container_name: FPG
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+#    depends_on:
+#      - sqlite
+    restart: always
+
+volumes:
+  sqlite-data:
