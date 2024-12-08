@@ -1,6 +1,8 @@
 import json
 import secrets
 
+from websockets import broadcast
+
 from src.data import does_game_exist, set_game, get_game
 
 
@@ -54,5 +56,6 @@ async def event_join(message_json, websocket):
     set_game(game_key, game)
 
     await websocket.send(json.dumps({"type": "room_joined", "game": game["game"], "players": game["players"]}))
+    broadcast(game_key, json.dumps({"type": "player_joined", "player": player}))
     print(f"Player {player} joined room {game_key}")
 
