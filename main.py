@@ -14,7 +14,7 @@ async def handler(websocket):
 
 
 async def main():
-    async with serve(handler, "", 8001):
+    async with serve(handler, "ws-fpg.pebloop.dev", 8001):
         await asyncio.get_running_loop().create_future()
 
 
