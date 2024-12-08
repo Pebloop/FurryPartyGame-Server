@@ -17,4 +17,4 @@ async def manage_websockets(message: str, websocket):
         game_key = secrets.token_urlsafe(4)
         game_key = game_key.upper()
         print(f"New game created with key {game_key}")
-        await websocket.send(json.dumps({"type": "init", "game_key": game_key}))
+        await websocket.send(json.dumps({"type": "room_key", "game_key": game_key}))
