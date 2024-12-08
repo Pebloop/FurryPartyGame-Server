@@ -32,7 +32,7 @@ async def event_init(message_json, websocket):
     while does_game_exist(game_key):
         game_key = generate_room_key()
     print(f"New game created with key {game_key}")
-    set_game(game_key, {"game": game, "players": []})
+    set_game(game_key, {"game": game, "players": [], "client": websocket})
     await websocket.send(json.dumps({"type": "room_key", "game_key": game_key}))
 
 
@@ -52,10 +52,10 @@ async def event_join(message_json, websocket):
         await websocket.send(json.dumps({"type": "error", "message": "Player already in room"}))
         return
 
-    game["players"].append(player)
+    game["players"].append({"name": player, "client": websocket})
     set_game(game_key, game)
 
     await websocket.send(json.dumps({"type": "room_joined", "game": game["game"], "players": game["players"]}))
-    broadcast(websocket, json.dumps({"type": "player_joined", "player": player}))
+    await game["client"].send(json.dumps({"type": "player_joined", "player": player}))
     print(f"Player {player} joined room {game_key}")
 
