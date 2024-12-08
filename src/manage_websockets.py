@@ -1,7 +1,7 @@
 import json
 import secrets
 
-from src.data import does_game_exist, set_game
+from src.data import does_game_exist, set_game, get_game
 
 
 def generate_room_key():
@@ -37,4 +37,22 @@ async def event_init(message_json, websocket):
 async def event_join(message_json, websocket):
     game_key = message_json.get("room")
     player = message_json.get("name")
-    print(f"{player} joined game with key {game_key}")
+
+    # check that room exists
+    if not does_game_exist(game_key):
+        await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
+        return
+
+    # add player to room
+    game = get_game(game_key)
+
+    if player in game["players"]:
+        await websocket.send(json.dumps({"type": "error", "message": "Player already in room"}))
+        return
+
+    game["players"].append(player)
+    set_game(game_key, game)
+
+    await websocket.send(json.dumps({"type": "room_joined", "game": game["game"], "players": game["players"]}))
+    print(f"Player {player} joined room {game_key}")
+
