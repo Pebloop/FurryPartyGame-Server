@@ -24,6 +24,12 @@ async def manage_websockets(message: str, websocket):
         await event_init(message_json, websocket)
     if eventType == "join":
         await event_join(message_json, websocket)
+    if eventType == "runrunrun_jump":
+        await event_runrunrun_jump(message_json, websocket)
+    if eventType == "runrunrun_start_crouching":
+        await event_runrunrun_start_crouching(message_json, websocket)
+    if eventType == "runrunrun_stop_crouching":
+        await event_runrunrun_stop_crouching(message_json, websocket)
 
 
 async def event_init(message_json, websocket):
@@ -59,3 +65,33 @@ async def event_join(message_json, websocket):
     await game["client"].send(json.dumps({"type": "player_joined", "player": player}))
     print(f"Player {player} joined room {game_key}")
 
+
+async def event_runrunrun_jump(message_json, websocket):
+    game_key = message_json.get("code")
+    player = message_json.get("player")
+    game = get_game(game_key)
+    if not game:
+        await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
+        return
+    await game["client"].send(json.dumps({"type": "runrunrun_jump", "player": player}))
+    print(f"Player {player} jumped in room {game_key}")
+
+async def event_runrunrun_start_crouching(message_json, websocket):
+    game_key = message_json.get("code")
+    player = message_json.get("player")
+    game = get_game(game_key)
+    if not game:
+        await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
+        return
+    await game["client"].send(json.dumps({"type": "runrunrun_start_crouching", "player": player}))
+    print(f"Player {player} started crouching in room {game_key}")
+
+async def event_runrunrun_stop_crouching(message_json, websocket):
+    game_key = message_json.get("code")
+    player = message_json.get("player")
+    game = get_game(game_key)
+    if not game:
+        await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
+        return
+    await game["client"].send(json.dumps({"type": "runrunrun_stop_crouching", "player": player}))
+    print(f"Player {player} stopped crouching in room {game_key}")
