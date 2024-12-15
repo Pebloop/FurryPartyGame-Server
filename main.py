@@ -10,7 +10,7 @@ from websockets import ConnectionClosedOK
 from websockets.asyncio.server import serve, ServerConnection
 from dotenv import load_dotenv
 
-from src.data import get_connection, get_game
+from src.data import get_connection, get_game, set_game
 from src.manage_websockets import manage_websockets
 
 
@@ -24,7 +24,8 @@ async def on_connection_closed(websocket):
         elif closed["type"] == "player":
             print(f"Player {closed['name']} left the game")
             game = get_game(closed["game_key"])
-            game["players"].remove(closed["name"])
+            game["players"] = [player for player in game["players"] if player["name"] != closed["name"]]
+            set_game(closed["game_key"], game)
             await game["client"].send(json.dumps({"type": "player_left", "name": closed["name"]}))
 
     await websocket.close()
