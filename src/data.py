@@ -21,6 +21,7 @@ def does_game_exist(game_key: str):
 
 def get_connection(websocket):
     for game in DATA.values():
+        print(game)
         if game["client"] == websocket:
             return {"game_key": game["game_key"], "type": "game"}
         for player in game["players"]:
