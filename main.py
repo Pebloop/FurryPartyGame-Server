@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+import signal
 import ssl
 
 from websockets import ConnectionClosedOK
@@ -44,8 +45,14 @@ async def main():
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ssl_context.load_cert_chain(os.getenv("SSL_FULLCHAIN", ""), os.getenv("SSL_PRIVKEY", ""))
     port = int(os.getenv("PORT", 8001))
+
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+
     async with serve(handler, os.getenv("HOST", "localhost"), port, ssl=ssl_context):
-        await asyncio.Future()
+        await stop
+
 
 if __name__ == "__main__":
     asyncio.run(main())
