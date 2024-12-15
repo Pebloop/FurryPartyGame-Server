@@ -33,11 +33,11 @@ async def on_connection_closed(websocket):
 
 
 async def handler(websocket):
-    closed = asyncio.ensure_future(websocket.wait_closed())
-    closed.add_done_callback(on_connection_closed)
-
-    async for message in websocket:
-        await manage_websockets(message, websocket)
+    try:
+        async for message in websocket:
+            await manage_websockets(message, websocket)
+    except ConnectionClosedOK:
+        await on_connection_closed(websocket)
 
 
 async def main():
