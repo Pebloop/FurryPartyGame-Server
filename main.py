@@ -16,11 +16,9 @@ from src.manage_websockets import manage_websockets
 
 async def on_connection_closed(websocket):
     closed = get_connection(websocket)
-    print(closed)
 
     if closed is not None:
         if closed["type"] == "game":
-            print(f"Game {closed['game_key']} closed")
             for player in get_game(closed["game_key"])["players"]:
                 await player["client"].send(json.dumps({"type": "game_closed"}))
         elif closed["type"] == "player":
