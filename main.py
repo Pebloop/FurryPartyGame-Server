@@ -7,7 +7,7 @@ import signal
 import ssl
 
 from websockets import ConnectionClosedOK
-from websockets.asyncio.server import serve
+from websockets.asyncio.server import serve, ServerConnection
 from dotenv import load_dotenv
 
 from src.data import get_connection, get_game
@@ -32,7 +32,11 @@ async def on_connection_closed(websocket):
     await websocket.close()
 
 
-async def handler(websocket):
+async def handler(websocket: ServerConnection):
+    # add listener for connection closed
+    closed = asyncio.ensure_future(websocket.wait_closed())
+    closed.add_done_callback(lambda _: on_connection_closed(websocket))
+
     try:
         async for message in websocket:
             await manage_websockets(message, websocket)
