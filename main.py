@@ -20,7 +20,7 @@ async def on_connection_closed(websocket):
         if closed["type"] == "game":
             print(f"Game {closed['game_key']} closed")
             for player in get_game(closed["game_key"])["players"]:
-                await player["client"].close(reason=ConnectionClosedOK)
+                await player["client"].send(json.dumps({"type": "game_closed"}))
         elif closed["type"] == "player":
             print(f"Player {closed['name']} left the game")
             game = get_game(closed["game_key"])
