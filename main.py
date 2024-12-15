@@ -14,7 +14,7 @@ from src.data import get_connection, get_game
 from src.manage_websockets import manage_websockets
 
 
-async def on_connection_closed(websocket):
+def on_connection_closed(websocket):
     closed = get_connection(websocket)
     print("Connection closed")
 
@@ -22,14 +22,14 @@ async def on_connection_closed(websocket):
         if closed["type"] == "game":
             print(f"Game {closed['game_key']} closed")
             for player in get_game(closed["game_key"])["players"]:
-                await player["client"].send(json.dumps({"type": "game_closed"}))
+                player["client"].send(json.dumps({"type": "game_closed"}))
         elif closed["type"] == "player":
             print(f"Player {closed['name']} left the game")
             game = get_game(closed["game_key"])
             game["players"].remove(closed["name"])
             game["client"].send(json.dumps({"type": "player_left", "name": closed["name"]}))
 
-    await websocket.close()
+    websocket.close()
 
 
 async def handler(websocket):
