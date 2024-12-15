@@ -15,6 +15,7 @@ from src.manage_websockets import manage_websockets
 
 async def on_connection_closed(websocket):
     closed = get_connection(websocket)
+    print("Connection closed")
 
     if closed is not None:
         if closed["type"] == "game":
