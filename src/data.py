@@ -17,3 +17,13 @@ def remove_game(game_key: str):
 
 def does_game_exist(game_key: str):
     return game_key in DATA
+
+
+def get_connection(websocket):
+    for game in DATA.values():
+        if game["client"] == websocket:
+            return {"game_key": game["game_key"], "type": "game"}
+        for player in game["players"]:
+            if player["client"] == websocket:
+                return {"game_key": game["game_key"], "type": "player", "name": player["name"]}
+    return None
