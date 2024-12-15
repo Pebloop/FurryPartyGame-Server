@@ -35,7 +35,7 @@ async def on_connection_closed(websocket):
 async def handler(websocket: ServerConnection):
     # add listener for connection closed
     closed = asyncio.ensure_future(websocket.wait_closed())
-    closed.add_done_callback(lambda _: on_connection_closed(websocket))
+    closed.add_done_callback(lambda _: asyncio.ensure_future(on_connection_closed(websocket)))
 
     try:
         async for message in websocket:
