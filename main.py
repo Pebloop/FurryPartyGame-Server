@@ -43,12 +43,8 @@ async def main():
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ssl_context.load_cert_chain(os.getenv("SSL_FULLCHAIN", ""), os.getenv("SSL_PRIVKEY", ""))
     port = int(os.getenv("PORT", 8001))
-    loop = asyncio.get_event_loop()
-    loop.set_debug(True)
-    ws_server = serve(handler, os.getenv("HOST", "localhost"), port, ssl=ssl_context)
-    loop.run_until_complete(ws_server)
-    loop.run_forever()
-
+    async with serve(handler, os.getenv("HOST", "localhost"), port, ssl=ssl_context):
+        await asyncio.Future()
 
 if __name__ == "__main__":
     asyncio.run(main())
