@@ -2,6 +2,7 @@ import json
 import secrets
 
 from websockets import broadcast
+from websockets.asyncio.server import ServerConnection
 
 from src.data import does_game_exist, set_game, get_game
 
@@ -10,7 +11,7 @@ def generate_room_key():
     return secrets.token_urlsafe(4).upper()
 
 
-async def manage_websockets(message: str, websocket):
+async def manage_websockets(message: str, websocket: ServerConnection):
     # convert to json
     try:
         message_json = json.loads(message)
@@ -32,7 +33,7 @@ async def manage_websockets(message: str, websocket):
         await event_runrunrun_stop_crouching(message_json, websocket)
 
 
-async def event_init(message_json, websocket):
+async def event_init(message_json, websocket: ServerConnection):
     game = message_json.get("game")
     game_key = generate_room_key()
     while does_game_exist(game_key):
@@ -42,7 +43,7 @@ async def event_init(message_json, websocket):
     await websocket.send(json.dumps({"type": "room_key", "game_key": game_key}))
 
 
-async def event_join(message_json, websocket):
+async def event_join(message_json, websocket: ServerConnection):
     game_key = message_json.get("room")
     player = message_json.get("name")
 
@@ -66,7 +67,7 @@ async def event_join(message_json, websocket):
     print(f"Player {player} joined room {game_key}")
 
 
-async def event_runrunrun_jump(message_json, websocket):
+async def event_runrunrun_jump(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
     time = websocket.latency
@@ -78,7 +79,7 @@ async def event_runrunrun_jump(message_json, websocket):
     print(f"Player {player} jumped in room {game_key}")
 
 
-async def event_runrunrun_start_crouching(message_json, websocket):
+async def event_runrunrun_start_crouching(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
     time = websocket.latency
@@ -90,7 +91,7 @@ async def event_runrunrun_start_crouching(message_json, websocket):
     print(f"Player {player} started crouching in room {game_key}")
 
 
-async def event_runrunrun_stop_crouching(message_json, websocket):
+async def event_runrunrun_stop_crouching(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
     time = websocket.latency
