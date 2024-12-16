@@ -69,29 +69,34 @@ async def event_join(message_json, websocket):
 async def event_runrunrun_jump(message_json, websocket):
     game_key = message_json.get("code")
     player = message_json.get("player")
+    time = message_json.get("time")
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
         return
-    await game["client"].send(json.dumps({"type": "runrunrun_jump", "player": player}))
+    await game["client"].send(json.dumps({"type": "runrunrun_jump", "player": player, "time": time}))
     print(f"Player {player} jumped in room {game_key}")
+
 
 async def event_runrunrun_start_crouching(message_json, websocket):
     game_key = message_json.get("code")
     player = message_json.get("player")
+    time = message_json.get("time")
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
         return
-    await game["client"].send(json.dumps({"type": "runrunrun_start_crouching", "player": player}))
+    await game["client"].send(json.dumps({"type": "runrunrun_start_crouching", "player": player, "time": time}))
     print(f"Player {player} started crouching in room {game_key}")
+
 
 async def event_runrunrun_stop_crouching(message_json, websocket):
     game_key = message_json.get("code")
     player = message_json.get("player")
+    time = message_json.get("time")
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
         return
-    await game["client"].send(json.dumps({"type": "runrunrun_stop_crouching", "player": player}))
+    await game["client"].send(json.dumps({"type": "runrunrun_stop_crouching", "player": player, "time": time}))
     print(f"Player {player} stopped crouching in room {game_key}")
