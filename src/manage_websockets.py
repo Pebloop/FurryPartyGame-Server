@@ -76,7 +76,7 @@ async def event_runrunrun_jump(message_json, websocket: ServerConnection):
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
         return
     await game["client"].send(json.dumps({"type": "runrunrun_jump", "player": player, "time": time}))
-    print(f"Player {player} jumped in room {game_key}")
+    print(f"Player {player} jumped in room {game_key} with latency {time}")
 
 
 async def event_runrunrun_start_crouching(message_json, websocket: ServerConnection):
