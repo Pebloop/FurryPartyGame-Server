@@ -70,7 +70,7 @@ async def event_join(message_json, websocket: ServerConnection):
 async def event_runrunrun_jump(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
-    time = websocket.latency
+    time = websocket.latency * 1000
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
@@ -82,7 +82,7 @@ async def event_runrunrun_jump(message_json, websocket: ServerConnection):
 async def event_runrunrun_start_crouching(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
-    time = websocket.latency
+    time = websocket.latency * 1000
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
@@ -94,7 +94,7 @@ async def event_runrunrun_start_crouching(message_json, websocket: ServerConnect
 async def event_runrunrun_stop_crouching(message_json, websocket: ServerConnection):
     game_key = message_json.get("code")
     player = message_json.get("player")
-    time = websocket.latency
+    time = websocket.latency * 1000
     game = get_game(game_key)
     if not game:
         await websocket.send(json.dumps({"type": "error", "message": "Room does not exist"}))
