@@ -45,15 +45,15 @@ async def handler(websocket: ServerConnection):
 
 async def main():
     load_dotenv()
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    ssl_context.load_cert_chain(os.getenv("SSL_FULLCHAIN", ""), os.getenv("SSL_PRIVKEY", ""))
+    #ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    #ssl_context.load_cert_chain(os.getenv("SSL_FULLCHAIN", ""), os.getenv("SSL_PRIVKEY", ""))
     port = int(os.getenv("PORT", 8001))
 
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
 
-    async with serve(handler, os.getenv("HOST", "localhost"), port, ssl=ssl_context):
+    async with serve(handler, os.getenv("HOST", "localhost"), port):
         await stop
 
 
