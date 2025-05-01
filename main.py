@@ -35,6 +35,7 @@ async def handler(websocket: ServerConnection):
     # add listener for connection closed
     closed = asyncio.ensure_future(websocket.wait_closed())
     closed.add_done_callback(lambda _: asyncio.ensure_future(on_connection_closed(websocket)))
+    print(f"New connection from {websocket.remote_address}")
 
     try:
         async for message in websocket:
